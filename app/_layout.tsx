@@ -1,10 +1,14 @@
+import { ClerkProvider } from "@clerk/clerk-expo";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import "../global.css";
 
 export default function RootLayout() {
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
   const [loaded] = useFonts({
     "Jakarta-Bold": require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
     "Jakarta-ExtraBold": require("../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
@@ -26,11 +30,8 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(root)" />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <Slot />
+    </ClerkProvider>
   );
 }
